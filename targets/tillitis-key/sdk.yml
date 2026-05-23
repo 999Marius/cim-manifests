@@ -16,10 +16,20 @@ mirror: $HOME/tmp/mirror
 ################################################################################
 # Replace the in-tree tkey-libs copy with a symlink to the separately cloned
 # repo so that all Makefiles see the same sources.
+# Apply out-of-tree patches to upstream repos.
 envsetup:
   commands: |
     @echo "Setting up Tillitis Key workspace"
     ln -sfn $(WORKSPACE)/tkey-libs $(WORKSPACE)/tillitis-key1/hw/application_fpga/tkey-libs
+    git -C $(WORKSPACE)/tillitis-key1 am --ignore-whitespace $(WORKSPACE)/patches/0001-build-use-lld-for-RISC-V-cross-compilation.patch || true
+
+
+################################################################################
+# Extra files copied into the workspace
+################################################################################
+copy_files:
+  - source: patches/
+    dest: patches/
 
 
 ################################################################################

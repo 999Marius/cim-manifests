@@ -33,11 +33,20 @@ After a successful build, boot the emulated TKey:
 $ make qemu-run
 ```
 
-QEMU will print a PTY path (e.g. `/dev/pts/3`). In another terminal, use
-`tkey-runapp` to load an app:
+QEMU will print a PTY path (e.g. `/dev/pts/3`). The emulated TKey UART
+speaks an internal "USB Mode Protocol", so you need to run the USB mux
+to get a plain CDC serial port that `tkey-runapp` understands.
+Open a second terminal and run:
 
 ```bash
-$ ./tkey-devtools/tkey-runapp --port /dev/pts/3 --app ./tillitis-key1/hw/application_fpga/apps/testapp.bin
+$ make qemu-usb-mux 3
+```
+
+This creates symlinks like `./tkey-qemu-CDC.pty`. In a third terminal,
+load the test app:
+
+```bash
+$ make tkey-devtools-test
 ```
 
 To quit QEMU, press `Ctrl-A` then `X`.
@@ -95,7 +104,7 @@ The build overlays define the following targets:
 - **qemu-run-gdb**: Boots with GDB server on port 1234 and stops at startup.
 - **tkey-devtools-build**: Builds the `tkey-runapp` Go tool.
 - **tkey-devtools-clean**: Removes built Go binaries.
-- **tkey-devtools-test**: Runs `golangci-lint` on the Go sources.
+- **tkey-devtools-test**: Loads `testapp.bin` onto the emulated TKey via `tkey-runapp`.
 
 The rest of the files are regular CIM manifest files: `os-dependencies.yml`
 lists host OS packages (LLVM/Clang, Go, QEMU build deps, etc.), and
