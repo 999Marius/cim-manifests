@@ -27,11 +27,14 @@ clean:
 
 install:
   # Ubuntu 26.04 ships libxml2.so.16; Bazel's prebuilt ld.lld needs libxml2.so.2.
-  # Create a compat symlink so the linker can find it.
+  # Create a compat symlink only when .so.16 exists and .so.2 does not, so we
+  # don't clobber a real libxml2.so.2 on older distros.
   - name: libxml2-compat-symlink
     sentinel: .opt-libxml2-installed
     commands: |
-      sudo ln -sf /usr/lib/x86_64-linux-gnu/libxml2.so.16 /usr/lib/x86_64-linux-gnu/libxml2.so.2
+      if [ -e /usr/lib/x86_64-linux-gnu/libxml2.so.16 ] && [ ! -e /usr/lib/x86_64-linux-gnu/libxml2.so.2 ]; then
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libxml2.so.16 /usr/lib/x86_64-linux-gnu/libxml2.so.2
+      fi
   # Remove the compat symlink added by libxml2-compat-symlink.
   # - name: libxml2-compat-symlink-remove
   #   commands: |
