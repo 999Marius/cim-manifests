@@ -1,0 +1,48 @@
+################################################################################
+# Mirror location for downloads, toolchains and gits.
+################################################################################
+mirror: $HOME/tmp/mirror
+
+
+################################################################################
+# High-level Makefile targets
+################################################################################
+
+build:
+  commands: |
+    cd pavona && PATH=$(CURDIR)/.venv/bin:$$PATH ./bazelisk.sh build sw/device/examples/hello_world:hello_world
+
+test:
+  commands: |
+    cd pavona && PATH=$(CURDIR)/.venv/bin:$$PATH ./bazelisk.sh test sw/device/examples/hello_world:hello_world_sim_verilator --test_output=streamed
+
+clean:
+  commands: |
+    cd pavona && ./bazelisk.sh clean
+
+
+################################################################################
+# Install targets
+################################################################################
+
+install:
+  # Ubuntu 26.04 ships libxml2.so.16; Bazel's prebuilt ld.lld needs libxml2.so.2.
+  # Create a compat symlink so the linker can find it.
+  - name: libxml2-compat-symlink
+    sentinel: .opt-libxml2-installed
+    commands: |
+      sudo ln -sf /usr/lib/x86_64-linux-gnu/libxml2.so.16 /usr/lib/x86_64-linux-gnu/libxml2.so.2
+  # Remove the compat symlink added by libxml2-compat-symlink.
+  # - name: libxml2-compat-symlink-remove
+  #   commands: |
+  #     sudo rm -f /usr/lib/x86_64-linux-gnu/libxml2.so.2
+  #     rm -f .opt-libxml2-installed
+
+
+################################################################################
+# Gits for the project
+################################################################################
+gits:
+  - name: pavona
+    url: https://github.com/pavona/pavona.git
+    commit: main
