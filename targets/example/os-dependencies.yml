@@ -1,5 +1,5 @@
-# # Common package lists using YAML anchors for DRY
-ubuntu_packages: &ubuntu_pkgs
+# Common package lists using YAML anchors for DRY
+ubuntu_packages_base: &ubuntu_packages_base
   - build-essential
   - cmake
   - curl
@@ -12,8 +12,12 @@ ubuntu_packages: &ubuntu_pkgs
   - python3-pip
   - vim
 
+# x86_64-only packages (no ARM64 equivalents)
+ubuntu_packages_x86_64_extras: &ubuntu_packages_x86_64_extras
+  - gcc-multilib
+  - g++-multilib
 
-fedora_packages: &fedora_pkgs
+fedora_packages: &fedora_packages
   - boost-devel
   - cmake
   - curl
@@ -29,72 +33,86 @@ fedora_packages: &fedora_pkgs
 
 
 # Linux x86_64 (Intel/AMD) dependencies
+# packages composes the base list with x86_64-specific extras
 linux-x86_64:
   ubuntu-26.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
 
   ubuntu-24.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
 
   ubuntu-22.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
-  
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
+
   fedora-43:
     command: "dnf install"
-    packages: *fedora_pkgs
-  
+    packages: *fedora_packages
+
   fedora-42:
     command: "dnf install"
-    packages: *fedora_pkgs
+    packages: *fedora_packages
 
 
-# Linux ARM64 (Apple Silicon, ARM servers) dependencies  
+# Linux ARM64 (Apple Silicon, ARM servers) dependencies
+# packages is the flat base anchor — no multilib packages on ARM64
 linux-aarch64:
   ubuntu-26.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages: *ubuntu_packages_base
 
   ubuntu-24.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages: *ubuntu_packages_base
 
   ubuntu-22.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
-  
+    packages: *ubuntu_packages_base
+
   fedora-43:
     command: "dnf install"
-    packages: *fedora_pkgs
-  
+    packages: *fedora_packages
+
   fedora-42:
     command: "dnf install"
-    packages: *fedora_pkgs
+    packages: *fedora_packages
 
 
 # Backward compatibility - generic linux (defaults to x86_64 behavior)
 linux:
   ubuntu-26.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
 
   ubuntu-24.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
 
   ubuntu-22.04:
     command: "apt install"
-    packages: *ubuntu_pkgs
-  
+    packages:
+      - *ubuntu_packages_base
+      - *ubuntu_packages_x86_64_extras
+
   fedora-43:
     command: "dnf install"
-    packages: *fedora_pkgs
-  
+    packages: *fedora_packages
+
   fedora-42:
     command: "dnf install"
-    packages: *fedora_pkgs
+    packages: *fedora_packages
 
 
 macos:
