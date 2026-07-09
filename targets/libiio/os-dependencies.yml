@@ -1,0 +1,128 @@
+ubuntu_packages: &ubuntu_pkgs
+  - build-essential
+  - cmake
+  - pkg-config
+  - bison
+  - flex
+  - libaio-dev
+  - libxml2-dev
+  - libusb-1.0-0-dev
+  - libavahi-client-dev
+  - libzstd-dev
+  - libserialport-dev
+  - libncurses-dev
+  - libcdk5-dev
+  - mono-complete
+  - python3-dev
+  - python3-pip
+  - python3-venv
+  - python3-setuptools
+
+fedora_packages: &fedora_pkgs
+  - gcc
+  - gcc-c++
+  - make
+  - cmake
+  - pkgconfig
+  - bison
+  - flex
+  - libaio-devel
+  - libxml2-devel
+  - libusb1-devel
+  - avahi-devel
+  - libzstd-devel
+  - libserialport-devel
+  - ncurses-devel
+  - cdk-devel
+  - mono-complete
+  - python3-devel
+  - python3-pip
+  - python3-setuptools
+
+linux-x86_64:
+  ubuntu-26.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-24.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-22.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  fedora-43:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+  fedora-42:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+linux-aarch64:
+  ubuntu-26.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-24.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-22.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  fedora-43:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+  fedora-42:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+linux:
+  ubuntu-26.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-24.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  ubuntu-22.04:
+    command: "apt install"
+    packages: *ubuntu_pkgs
+
+  fedora-43:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+  fedora-42:
+    command: "dnf install"
+    packages: *fedora_pkgs
+
+macos:
+  macos-any:
+    command: "brew install"
+    packages:
+      - cmake
+      - pkg-config
+      - libxml2
+      - libusb
+      - zstd
+      - libserialport
+      - ncurses
+      - cdk
+      - python3
+      - mono
+
+# Windows dependencies
+# Note: Visual Studio (2019/2022/2026) with C++ workload must be installed manually.
+windows:
+  windows-any:
+    command: "winget install --silent"
+    packages:
+      - Kitware.CMake
+      - 7zip.7zip
+      - GnuWin32.Make
